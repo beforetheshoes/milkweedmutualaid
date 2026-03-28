@@ -1,0 +1,4 @@
+- `pnpm install` — install dependencies.
+- `pnpm dev` — run Vite dev server for local development.
+- `pnpm run type-check` — strict TypeScript validation via vue-tsc.
+- `GHOST_URL=... GHOST_CONTENT_KEY=... pnpm run build` — SSG build with vite-ssg; requires Ghost env vars.

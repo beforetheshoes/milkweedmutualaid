@@ -1,0 +1,78 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "daisyui" {
+  themes: light --default, dark;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(120% 120% at 10% 15%, rgba(99, 102, 241, 0.28), transparent 55%),
+    radial-gradient(110% 110% at 90% 10%, rgba(236, 72, 153, 0.22), transparent 55%),
+    linear-gradient(135deg, rgba(15, 118, 110, 0.32), rgba(15, 23, 42, 0.45) 45%, rgba(15, 23, 42, 0.7));
+  color: hsl(var(--bc));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.kg-card.kg-callout-card,
+.kg-callout-card {
+  margin: 2.5rem 0;
+  padding: 1.85rem;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.35);
+  display: flex;
+  gap: 1.15rem;
+  align-items: flex-start;
+  box-shadow: 0 22px 55px -35px rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+}
+
+.kg-card.kg-callout-card .kg-callout-emoji,
+.kg-callout-card .kg-callout-emoji {
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.kg-card.kg-callout-card .kg-callout-text,
+.kg-callout-card .kg-callout-text {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: hsl(var(--bc));
+}
+
+.kg-callout-card-blue {
+  border-color: rgba(59, 130, 246, 0.45);
+  background: rgba(59, 130, 246, 0.18);
+}
+
+.kg-callout-card-green {
+  border-color: rgba(34, 197, 94, 0.45);
+  background: rgba(34, 197, 94, 0.18);
+}
+
+.kg-callout-card-yellow {
+  border-color: rgba(250, 204, 21, 0.45);
+  background: rgba(250, 204, 21, 0.22);
+}
+
+.kg-callout-card-red {
+  border-color: rgba(248, 113, 113, 0.45);
+  background: rgba(248, 113, 113, 0.2);
+}
+
+.kg-callout-card-pink {
+  border-color: rgba(244, 114, 182, 0.45);
+  background: rgba(244, 114, 182, 0.2);
+}
+
+.prose blockquote {
+  border-left: 4px solid rgba(59, 130, 246, 0.55);
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  background: rgba(59, 130, 246, 0.12);
+  border-radius: 1.25rem;
+  font-style: normal;
+  color: hsl(var(--bc));
+}

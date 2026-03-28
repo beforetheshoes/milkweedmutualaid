@@ -1,0 +1,4 @@
+- Components use `<script setup lang="ts">` with Composition API and refs/computeds for state.
+- Styling relies on Tailwind CSS utility classes with DaisyUI components; keep markup semantic and accessible.
+- Ghost data access happens during SSG via `onServerPrefetch` and the server-only `ghost.server.ts` helper. Avoid client-side API calls with secrets.
+- Maintain bilingual support: use vue-i18n for UI strings and respect EN/ES route params when adding pages.

@@ -1,0 +1,4 @@
+- Vue 3 + Vite SSG static frontend that consumes Ghost content at build time using the Ghost Content API.
+- Purpose: deliver a bilingual (EN/ES) public site for Milkweed Mutual Aid while editors keep using Ghost Admin for authoring.
+- Key libraries: vue-router, vue-i18n, Tailwind CSS with DaisyUI, @tryghost/content-api, vue-tsc for strict TypeScript checking.
+- Output deploys as a static bundle (dist/) suitable for Netlify; Ghost remains on existing VM.

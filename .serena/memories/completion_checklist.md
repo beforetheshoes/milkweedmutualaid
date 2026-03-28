@@ -1,0 +1,3 @@
+- Run `pnpm run type-check` before handing off changes.
+- For production builds, ensure `GHOST_URL` and `GHOST_CONTENT_KEY` are set before executing `pnpm run build`.
+- Confirm bilingual routes (/en and /es) render and language toggle works in the built output when Ghost content is available.
