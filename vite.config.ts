@@ -166,7 +166,7 @@ export default defineConfig({
   build: {
     target: 'esnext',
     rollupOptions: {
-      external: ['node:crypto', 'node:fs', 'node:path']
+      external: ['node:crypto', 'node:fs', 'node:path', 'node:http', 'node:https', 'node:url', 'node:zlib', 'node:stream', 'node:buffer']
     }
   },
   ssr: {

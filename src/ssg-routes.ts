@@ -1,6 +1,8 @@
 import { getGhostServer } from './ghost.server'
 import { setSettings } from './composables/useSettings'
 import { setTags } from './composables/useTags'
+import { setEvents } from './composables/useEvents'
+import { fetchUpcomingEvents } from './calendar.server'
 import type { GhostTag, GhostSettings } from './types/ghost'
 
 type MinimalPost = {
@@ -36,6 +38,9 @@ export async function includedRoutes() {
 
   setSettings(settings)
   setTags(tags)
+
+  const events = await fetchUpcomingEvents()
+  setEvents(events)
 
   const hasLangTag = (post: MinimalPost, lang: 'en' | 'es') => post.tags?.some((tag) => tag?.slug === lang) ?? false
 

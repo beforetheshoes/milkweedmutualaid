@@ -8,6 +8,7 @@ const messages = {
       about: 'About',
       interestForm: 'Interest Form',
       contribute: 'Contribute',
+      language: 'Language',
       english: 'EN',
       spanish: 'ES'
     },
@@ -20,8 +21,20 @@ const messages = {
       principle3: 'To foster self protection and reliance on one another to have our needs met',
       principle4: 'To facilitate the exchange of ideas, resources (material and educational), creative exploration, art, liberation, joy and the things that matter most to our community'
     },
+    a11y: {
+      fontSize: 'Text',
+      highContrast: 'High contrast',
+      reducedMotion: 'Reduce motion',
+      darkMode: 'Dark mode',
+      lightMode: 'Light mode'
+    },
+    events: {
+      heading: 'Upcoming Events',
+      noEvents: 'No upcoming events right now.',
+      allDay: 'All day'
+    },
     blog: {
-      badge: 'News & Updates',
+      badge: 'Most Recent Post',
       listHeading: 'Community Updates',
       intro: 'Stories, resources, and updates from the Milkweed Mutual Aid collective. Posts are available in English and Spanish.',
       readMore: 'Read',
@@ -40,6 +53,14 @@ const messages = {
       loadMore: 'Load more',
       featuredBadge: 'Featured'
     },
+    newsletter: {
+      heading: 'Stay Connected',
+      description: 'Get updates from Milkweed delivered to your inbox.',
+      placeholder: "your{'@'}email.com",
+      button: 'Subscribe',
+      success: 'Check your email for a confirmation link!',
+      error: 'Something went wrong. Please try again.'
+    },
     author: {
       postsBy: 'Posts by {name}',
       noPosts: 'No posts by this author yet.',
@@ -56,6 +77,7 @@ const messages = {
       about: 'Acerca de',
       interestForm: 'Formulario',
       contribute: 'Contribuir',
+      language: 'Idioma',
       english: 'EN',
       spanish: 'ES'
     },
@@ -68,8 +90,20 @@ const messages = {
       principle3: 'Fomentar la autoprotección y la confianza mutua para satisfacer nuestras necesidades',
       principle4: 'Facilitar el intercambio de ideas, recursos (materiales y educativos), exploración creativa, arte, liberación, alegría y las cosas que más importan a nuestra comunidad'
     },
+    a11y: {
+      fontSize: 'Texto',
+      highContrast: 'Alto contraste',
+      reducedMotion: 'Reducir movimiento',
+      darkMode: 'Modo oscuro',
+      lightMode: 'Modo claro'
+    },
+    events: {
+      heading: 'Próximos Eventos',
+      noEvents: 'No hay eventos próximos en este momento.',
+      allDay: 'Todo el día'
+    },
     blog: {
-      badge: 'Noticias y Actualizaciones',
+      badge: 'Publicación más reciente',
       listHeading: 'Actualizaciones Comunitarias',
       intro: 'Historias, recursos y noticias del colectivo Milkweed Mutual Aid. Las publicaciones están disponibles en inglés y español.',
       readMore: 'Leer',
@@ -87,6 +121,14 @@ const messages = {
       allPosts: 'Todos',
       loadMore: 'Cargar más',
       featuredBadge: 'Destacado'
+    },
+    newsletter: {
+      heading: 'Mantente Conectado',
+      description: 'Recibe actualizaciones de Milkweed en tu correo.',
+      placeholder: "tu{'@'}correo.com",
+      button: 'Suscribirse',
+      success: '¡Revisa tu correo para un enlace de confirmación!',
+      error: 'Algo salió mal. Inténtalo de nuevo.'
     },
     author: {
       postsBy: 'Publicaciones de {name}',
