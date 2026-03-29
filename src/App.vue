@@ -13,30 +13,62 @@ const highContrast = ref(false)
 const fontSize = ref(1)
 const reducedMotion = ref(false)
 
+function loadSettings() {
+  try {
+    const saved = localStorage.getItem('a11y')
+    if (saved) {
+      const s = JSON.parse(saved)
+      dark.value = s.dark ?? false
+      highContrast.value = s.highContrast ?? false
+      fontSize.value = s.fontSize ?? 1
+      reducedMotion.value = s.reducedMotion ?? false
+      return true
+    }
+  } catch { /* ignore */ }
+  return false
+}
+
+function saveSettings() {
+  try {
+    localStorage.setItem('a11y', JSON.stringify({
+      dark: dark.value,
+      highContrast: highContrast.value,
+      fontSize: fontSize.value,
+      reducedMotion: reducedMotion.value
+    }))
+  } catch { /* ignore */ }
+}
+
 onMounted(() => {
-  dark.value = window.matchMedia('(prefers-color-scheme: dark)').matches
-  reducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  if (!loadSettings()) {
+    dark.value = window.matchMedia('(prefers-color-scheme: dark)').matches
+    reducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  }
   applyAll()
 })
 
 function toggleTheme() {
   dark.value = !dark.value
   applyAll()
+  saveSettings()
 }
 
 function toggleHighContrast() {
   highContrast.value = !highContrast.value
   applyAll()
+  saveSettings()
 }
 
 function setFontSize(level: number) {
   fontSize.value = level
   applyAll()
+  saveSettings()
 }
 
 function toggleReducedMotion() {
   reducedMotion.value = !reducedMotion.value
   applyAll()
+  saveSettings()
 }
 
 function applyAll() {

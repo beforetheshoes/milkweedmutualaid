@@ -133,6 +133,41 @@ html.high-contrast[data-theme="dark"] {
   --color-base-content: oklch(95.1% 0.011 302.8);      /* warm off-white, 15.9:1 on bg */
 }
 
+/*
+ * High contrast: force full-opacity text everywhere.
+ * Tailwind's /50, /60 etc. reduce alpha in the color value itself,
+ * so we override color to the full-opacity base-content or parent-content.
+ */
+html.high-contrast [class*="/50"],
+html.high-contrast [class*="/60"],
+html.high-contrast [class*="/70"],
+html.high-contrast [class*="/80"] {
+  color: var(--color-base-content) !important;
+}
+
+/* On colored backgrounds, use the appropriate content color at full opacity */
+html.high-contrast .bg-primary [class*="/50"],
+html.high-contrast .bg-primary [class*="/60"],
+html.high-contrast .bg-primary [class*="/70"],
+html.high-contrast .bg-primary [class*="/80"],
+html.high-contrast .bg-primary .text-accent {
+  color: var(--color-primary-content) !important;
+}
+
+html.high-contrast .bg-secondary [class*="/50"],
+html.high-contrast .bg-secondary [class*="/60"],
+html.high-contrast .bg-secondary [class*="/70"],
+html.high-contrast .bg-secondary [class*="/80"] {
+  color: var(--color-secondary-content) !important;
+}
+
+html.high-contrast .bg-accent [class*="/50"],
+html.high-contrast .bg-accent [class*="/60"],
+html.high-contrast .bg-accent [class*="/70"],
+html.high-contrast .bg-accent [class*="/80"] {
+  color: var(--color-accent-content) !important;
+}
+
 /* Accessibility: reduced motion */
 html.reduced-motion *,
 html.reduced-motion *::before,
