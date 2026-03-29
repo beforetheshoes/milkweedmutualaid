@@ -93,22 +93,18 @@ function langSwitchPath(targetLang: string) {
             >
               {{ t('nav.about') }}
             </RouterLink>
-            <a
-              href="https://forms.milkweedmutualaid.org/form/e8IzlkOA"
-              target="_blank"
-              rel="noopener noreferrer"
+            <RouterLink
+              :to="`/${lang}/interest`"
               class="rounded-lg px-3 py-1.5 transition-colors hover:bg-primary hover:text-primary-content"
             >
               {{ t('nav.interestForm') }}
-            </a>
-            <a
-              href="https://hcb.hackclub.com/donations/start/milkweed-mutual-aid"
-              target="_blank"
-              rel="noopener noreferrer"
+            </RouterLink>
+            <RouterLink
+              :to="`/${lang}/contribute`"
               class="ml-1 rounded-lg bg-secondary px-4 py-1.5 font-extrabold text-secondary-content shadow-[4px_4px_0_0] shadow-secondary/40 transition-all hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0] hover:shadow-secondary/40"
             >
               {{ t('nav.contribute') }}
-            </a>
+            </RouterLink>
           </nav>
 
           <!-- Mobile hamburger -->
@@ -122,8 +118,8 @@ function langSwitchPath(targetLang: string) {
           <nav class="flex flex-col gap-1 text-sm font-bold">
             <RouterLink :to="`/${lang}/blog`" class="rounded-lg px-3 py-2 hover:bg-primary hover:text-primary-content" @click="mobileNavOpen = false">{{ t('nav.blog') }}</RouterLink>
             <RouterLink :to="`/${lang}/about`" class="rounded-lg px-3 py-2 hover:bg-primary hover:text-primary-content" @click="mobileNavOpen = false">{{ t('nav.about') }}</RouterLink>
-            <a href="https://forms.milkweedmutualaid.org/form/e8IzlkOA" target="_blank" rel="noopener noreferrer" class="rounded-lg px-3 py-2 hover:bg-primary hover:text-primary-content">{{ t('nav.interestForm') }}</a>
-            <a href="https://hcb.hackclub.com/donations/start/milkweed-mutual-aid" target="_blank" rel="noopener noreferrer" class="rounded-lg bg-secondary px-3 py-2 text-center font-extrabold text-secondary-content">{{ t('nav.contribute') }}</a>
+            <RouterLink :to="`/${lang}/interest`" class="rounded-lg px-3 py-2 hover:bg-primary hover:text-primary-content" @click="mobileNavOpen = false">{{ t('nav.interestForm') }}</RouterLink>
+            <RouterLink :to="`/${lang}/contribute`" class="rounded-lg bg-secondary px-3 py-2 text-center font-extrabold text-secondary-content" @click="mobileNavOpen = false">{{ t('nav.contribute') }}</RouterLink>
           </nav>
         </div>
       </div>

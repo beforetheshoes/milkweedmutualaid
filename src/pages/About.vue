@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { useSeo } from '../composables/useSeo'
+import { useLang } from '../composables/useLang'
 
 const { t } = useI18n()
+const lang = useLang()
 
 useSeo({
   title: 'About — Milkweed Mutual Aid',
@@ -52,22 +54,18 @@ useSeo({
     </div>
 
     <div class="flex flex-wrap gap-3 pt-4">
-      <a
-        href="https://forms.milkweedmutualaid.org/form/e8IzlkOA"
-        target="_blank"
-        rel="noopener noreferrer"
+      <RouterLink
+        :to="`/${lang}/interest`"
         class="rounded-lg border-3 border-primary px-6 py-3 font-extrabold uppercase tracking-widest text-primary shadow-[4px_4px_0_0] shadow-primary/30 transition-all hover:-translate-y-0.5 hover:bg-primary hover:text-primary-content hover:shadow-[6px_6px_0_0]"
       >
         {{ t('nav.interestForm') }}
-      </a>
-      <a
-        href="https://hcb.hackclub.com/donations/start/milkweed-mutual-aid"
-        target="_blank"
-        rel="noopener noreferrer"
+      </RouterLink>
+      <RouterLink
+        :to="`/${lang}/contribute`"
         class="rounded-lg bg-secondary px-6 py-3 font-extrabold uppercase tracking-widest text-secondary-content shadow-[4px_4px_0_0] shadow-secondary/30 transition-all hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0]"
       >
         {{ t('nav.contribute') }}
-      </a>
+      </RouterLink>
     </div>
   </section>
 </template>

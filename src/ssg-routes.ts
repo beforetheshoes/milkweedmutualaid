@@ -16,7 +16,7 @@ type MinimalPage = {
 
 export async function includedRoutes() {
   const ghostServer = getGhostServer()
-  const collected = new Set<string>(['/', '/en/blog', '/es/blog', '/en/about', '/es/about'])
+  const collected = new Set<string>(['/', '/en/blog', '/es/blog', '/en/about', '/es/about', '/en/interest', '/es/interest', '/en/contribute', '/es/contribute'])
 
   const [allPosts, allPages, settings, tags] = await Promise.all([
     ghostServer.posts.browse<MinimalPost>({

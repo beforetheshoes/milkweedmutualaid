@@ -8,6 +8,7 @@ import { useSeo } from '../composables/useSeo'
 import { hasLangTag } from '../utils/posts'
 import { getTranslatedPost, getAutoTranslatedCounterpart } from '../translation/store'
 import { appState } from '../state'
+import { ghostSrcset, ghostSizes } from '../utils/images'
 import type { GhostPostDetail } from '../types/ghost'
 
 const DETAIL_FIELDS = 'id,title,slug,html,plaintext,excerpt,custom_excerpt,feature_image,feature_image_alt,feature_image_caption,published_at,reading_time,canonical_url,og_image,og_title,og_description,twitter_image,twitter_title,twitter_description,meta_title,meta_description'
@@ -235,7 +236,10 @@ if (import.meta.env.DEV) {
     <figure v-if="post.feature_image" class="mx-auto max-w-xl overflow-hidden rounded-xl border-3 border-base-300 shadow-[4px_4px_0_0] shadow-base-300/50">
       <img
         :src="post.feature_image"
+        :srcset="ghostSrcset(post.feature_image)"
+        :sizes="ghostSizes('full')"
         :alt="post.feature_image_alt ?? post.title"
+        loading="eager"
         class="w-full object-contain"
       />
       <figcaption

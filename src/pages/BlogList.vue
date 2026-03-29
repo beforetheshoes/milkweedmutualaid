@@ -10,6 +10,7 @@ import { getTags } from '../composables/useTags'
 import { getSettings } from '../composables/useSettings'
 import { getEvents } from '../composables/useEvents'
 import { appState } from '../state'
+import { ghostSrcset, ghostSizes } from '../utils/images'
 import type { GhostPostSummary } from '../types/ghost'
 
 const POSTS_PER_PAGE = 12
@@ -242,7 +243,10 @@ if (import.meta.env.DEV) {
         <div v-if="featuredPost.feature_image" class="mt-3 overflow-hidden rounded-lg">
           <img
             :src="featuredPost.feature_image"
+            :srcset="ghostSrcset(featuredPost.feature_image)"
+            :sizes="ghostSizes('full')"
             :alt="featuredPost.feature_image_alt ?? featuredPost.title"
+            loading="eager"
             class="w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
           />
         </div>
@@ -313,7 +317,10 @@ if (import.meta.env.DEV) {
         <div v-if="post.feature_image" class="overflow-hidden">
           <img
             :src="post.feature_image"
+            :srcset="ghostSrcset(post.feature_image)"
+            :sizes="ghostSizes('card')"
             :alt="post.feature_image_alt ?? post.title"
+            loading="lazy"
             class="w-full object-contain transition-transform duration-300 group-hover:scale-105"
           />
         </div>
