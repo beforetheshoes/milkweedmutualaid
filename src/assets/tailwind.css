@@ -149,7 +149,7 @@ html.high-contrast [class*="text-base-content/"] {
 }
 
 /* On primary (purple) backgrounds — keep distinct colors */
-html.high-contrast .bg-primary [class*="text-primary-content/"] {
+html.high-contrast .bg-primary [class*="text-primary-content"] {
   color: var(--color-primary-content) !important;
 }
 
@@ -175,17 +175,17 @@ html.high-contrast[data-theme="dark"] .bg-primary .text-accent {
   color: oklch(89.3% 0.102 201.7) !important;   /* bright teal, 7.9:1 on dark purple */
 }
 
-html.high-contrast[data-theme="dark"] .bg-primary [class*="text-primary-content/"] {
+html.high-contrast[data-theme="dark"] .bg-primary [class*="text-primary-content"] {
   color: oklch(100% 0 0) !important;             /* white, 10.5:1 on dark purple */
 }
 
 /* On secondary (pink) backgrounds */
-html.high-contrast .bg-secondary [class*="text-secondary-content/"] {
+html.high-contrast .bg-secondary [class*="text-secondary-content"] {
   color: var(--color-secondary-content) !important;
 }
 
 /* On accent backgrounds */
-html.high-contrast .bg-accent [class*="text-accent-content/"] {
+html.high-contrast .bg-accent [class*="text-accent-content"] {
   color: var(--color-accent-content) !important;
 }
 

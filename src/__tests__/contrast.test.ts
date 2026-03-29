@@ -176,6 +176,15 @@ describe.each(['light', 'dark', 'light-hc', 'dark-hc'] as const)('%s mode', (mod
       })
     }
 
+    if (mode === 'dark-hc') {
+      it('VALIDATES: raw primary-content on forced bg would fail (CSS override required)', () => {
+        // This proves the CSS override .bg-primary [class*="text-primary-content"] is essential
+        const rawRatio = contrastRatio(t['primary-content'], HC_DARK_PURPLE_BG)
+        expect(rawRatio, `raw primary-content on forced bg: ${fmt(rawRatio)} — must be < 3:1 to prove override is needed`)
+          .toBeLessThan(AA_LARGE)
+      })
+    }
+
     if (!isHC) {
       it('accent (event dates) on primary meets 3:1', () => {
         const r = contrastRatio(t['accent'], t['primary'])
