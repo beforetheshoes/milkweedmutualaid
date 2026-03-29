@@ -8,7 +8,8 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite-ssg build",
     "preview": "vite preview",
-    "type-check": "vue-tsc --noEmit"
+    "type-check": "vue-tsc --noEmit",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.19",
@@ -21,6 +22,7 @@
     "tailwindcss": "^4.1.4",
     "typescript": "~5.9.3",
     "vite": "^6.3.6",
+    "vitest": "^4.1.2",
     "vue-tsc": "^2.2.12"
   },
   "dependencies": {

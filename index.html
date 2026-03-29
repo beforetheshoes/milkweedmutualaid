@@ -10,6 +10,16 @@
     <meta name="description" content="Bilingual updates and resources from Milkweed Mutual Aid." />
   </head>
   <body>
+    <script>
+      // Apply saved settings before render to prevent flash
+      try {
+        var s = JSON.parse(localStorage.getItem('a11y') || '{}');
+        if (s.dark) document.documentElement.setAttribute('data-theme', 'dark');
+        if (s.highContrast) document.documentElement.classList.add('high-contrast');
+        if (s.reducedMotion) document.documentElement.classList.add('reduced-motion');
+        if (s.fontSize !== undefined) document.documentElement.style.fontSize = ['14px','16px','19px','22px'][s.fontSize] || '16px';
+      } catch(e) {}
+    </script>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
