@@ -102,31 +102,35 @@ body {
   font-style: normal;
 }
 
-/* Accessibility: high contrast */
+/*
+ * High contrast mode — WCAG AAA (7:1 normal text, 4.5:1 large text, 3:1 UI)
+ * All values measured against their respective backgrounds.
+ * Avoids pure black/white to prevent halation and eye strain.
+ */
 html.high-contrast[data-theme="light"] {
-  --color-primary: oklch(35% 0.2 310);
+  --color-primary: oklch(37.6% 0.165 308.3);           /* 11.1:1 on white */
   --color-primary-content: oklch(100% 0 0);
-  --color-secondary: oklch(80% 0.1 333);
-  --color-secondary-content: oklch(0% 0 0);
-  --color-accent: oklch(50% 0.15 203);
+  --color-secondary: oklch(47.1% 0.148 337.5);         /* 7.4:1 on white */
+  --color-secondary-content: oklch(100% 0 0);
+  --color-accent: oklch(42.8% 0.074 207.9);            /* 7.9:1 on white */
   --color-accent-content: oklch(100% 0 0);
+  --color-success: oklch(43.8% 0.090 145.9);           /* 7.5:1 on white */
+  --color-success-content: oklch(100% 0 0);
   --color-base-100: oklch(100% 0 0);
-  --color-base-content: oklch(0% 0 0);
+  --color-base-content: oklch(18.3% 0.031 298.6);      /* 18.8:1 on white */
 }
 
 html.high-contrast[data-theme="dark"] {
-  --color-primary: oklch(75% 0.2 310);
-  --color-primary-content: oklch(0% 0 0);
-  --color-secondary: oklch(85% 0.1 333);
-  --color-secondary-content: oklch(0% 0 0);
-  --color-accent: oklch(80% 0.15 203);
-  --color-accent-content: oklch(0% 0 0);
-  --color-base-100: oklch(5% 0 0);
-  --color-base-content: oklch(100% 0 0);
-}
-
-html.high-contrast * {
-  border-color: currentColor !important;
+  --color-primary: oklch(75.3% 0.113 308.2);           /* 8.0:1 on bg */
+  --color-primary-content: oklch(19.3% 0.025 299.4);
+  --color-secondary: oklch(83.7% 0.086 339.2);         /* 10.8:1 on bg */
+  --color-secondary-content: oklch(19.3% 0.025 299.4);
+  --color-accent: oklch(83.0% 0.108 202.8);            /* 11.3:1 on bg */
+  --color-accent-content: oklch(19.3% 0.025 299.4);
+  --color-success: oklch(76.3% 0.127 147.2);           /* 9.1:1 on bg */
+  --color-success-content: oklch(19.3% 0.025 299.4);
+  --color-base-100: oklch(19.3% 0.025 299.4);          /* deep purple-black, not pure black */
+  --color-base-content: oklch(95.1% 0.011 302.8);      /* warm off-white, 15.9:1 on bg */
 }
 
 /* Accessibility: reduced motion */
