@@ -153,6 +153,15 @@ html.high-contrast .bg-primary [class*="text-primary-content/"] {
   color: var(--color-primary-content) !important;
 }
 
+/*
+ * Accent text on primary bg: the HC accent is darkened for white bgs,
+ * so it's unreadable on dark purple. Use a bright teal instead.
+ * rgb(130, 240, 248) = 8.3:1 on HC purple — AAA
+ */
+html.high-contrast .bg-primary .text-accent {
+  color: oklch(89.3% 0.102 201.7) !important;
+}
+
 /* On secondary (pink) backgrounds */
 html.high-contrast .bg-secondary [class*="text-secondary-content/"] {
   color: var(--color-secondary-content) !important;
