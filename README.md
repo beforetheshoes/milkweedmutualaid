@@ -33,7 +33,7 @@ pnpm dev
 Requires a `.env` file (see `.env.example`):
 
 ```
-GHOST_URL=https://milkweedmutualaid.org
+GHOST_URL=https://ghost.milkweedmutualaid.org
 GHOST_CONTENT_KEY=your_content_api_key
 ```
 

@@ -21,7 +21,7 @@ const { t } = useI18n()
 const signupEmail = ref('')
 const signupStatus = ref<'idle' | 'loading' | 'success' | 'error'>('idle')
 const signupError = ref('')
-const ghostUrl = typeof window !== 'undefined' ? 'https://milkweedmutualaid.org' : ''
+const ghostUrl = typeof window !== 'undefined' ? 'https://ghost.milkweedmutualaid.org' : ''
 
 async function handleSignup() {
   if (!signupEmail.value.trim()) return
