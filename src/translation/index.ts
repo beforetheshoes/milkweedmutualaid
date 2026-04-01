@@ -16,11 +16,13 @@ function findXkey(tags: GhostTag[] | null | undefined): string | undefined {
 export async function translateMissingPosts(): Promise<string[]> {
   const ghostServer = getGhostServer()
 
-  const allPosts = await ghostServer.posts.browse<GhostPostDetail>({
+  const allPostsRaw = await ghostServer.posts.browse<GhostPostDetail>({
     include: 'tags,authors',
     limit: 'all',
     fields: 'id,title,slug,html,excerpt,custom_excerpt,feature_image,feature_image_alt,feature_image_caption,published_at,reading_time,canonical_url,og_image,og_title,og_description,twitter_image,twitter_title,twitter_description,meta_title,meta_description'
-  })
+  }).catch(() => [] as GhostPostDetail[])
+
+  const allPosts = Array.isArray(allPostsRaw) ? allPostsRaw : []
 
   const englishPosts = allPosts.filter(
     (post) => hasLangTag(post.tags, 'en') || (!hasLangTag(post.tags, 'en') && !hasLangTag(post.tags, 'es'))

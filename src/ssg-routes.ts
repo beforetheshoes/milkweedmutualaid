@@ -18,23 +18,27 @@ export async function includedRoutes() {
   const ghostServer = getGhostServer()
   const collected = new Set<string>(['/', '/en/blog', '/es/blog', '/en/about', '/es/about', '/en/interest', '/es/interest', '/en/contribute', '/es/contribute'])
 
-  const [allPosts, allPages, settings, tags] = await Promise.all([
+  const [allPostsRaw, allPagesRaw, settings, tagsRaw] = await Promise.all([
     ghostServer.posts.browse<MinimalPost>({
       include: 'tags',
       fields: 'slug',
       limit: 'all'
-    }),
+    }).catch(() => [] as MinimalPost[]),
     ghostServer.pages.browse<MinimalPage>({
       fields: 'slug',
       limit: 'all'
-    }),
-    ghostServer.settings.browse() as Promise<GhostSettings>,
+    }).catch(() => [] as MinimalPage[]),
+    ghostServer.settings.browse().catch(() => ({}) as GhostSettings) as Promise<GhostSettings>,
     ghostServer.tags.browse<GhostTag>({
       include: 'count.posts',
       filter: 'visibility:public',
       limit: 'all'
-    })
+    }).catch(() => [] as GhostTag[])
   ])
+
+  const allPosts = Array.isArray(allPostsRaw) ? allPostsRaw : []
+  const allPages = Array.isArray(allPagesRaw) ? allPagesRaw : []
+  const tags = Array.isArray(tagsRaw) ? tagsRaw : []
 
   setSettings(settings)
   setTags(tags)
