@@ -8,10 +8,10 @@ export default async () => {
   }
 
   await fetch(hookUrl, { method: "POST" })
-  console.log("Daily rebuild triggered")
+  console.log("Weekly rebuild triggered")
   return new Response("Rebuild triggered", { status: 200 })
 }
 
 export const config: Config = {
-  schedule: "@daily"
+  schedule: "@weekly"
 }
