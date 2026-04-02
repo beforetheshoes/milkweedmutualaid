@@ -114,6 +114,11 @@ async function browseServerPosts(targetLang: string) {
     const existingSlugs = new Set(selected.map((p) => p.slug))
     const autoTranslated = getAllTranslatedSummaries().filter((p) => !existingSlugs.has(p.slug))
     selected.push(...autoTranslated)
+    selected.sort((a, b) => {
+      const da = a.published_at ? new Date(a.published_at).getTime() : 0
+      const db = b.published_at ? new Date(b.published_at).getTime() : 0
+      return db - da
+    })
   }
 
   if (selected.length > 0) {
