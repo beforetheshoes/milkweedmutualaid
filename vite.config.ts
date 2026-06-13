@@ -170,6 +170,6 @@ export default defineConfig({
     }
   },
   ssr: {
-    noExternal: ['@tryghost/content-api', '@vitalets/google-translate-api']
+    noExternal: ['@tryghost/content-api', '@vitalets/google-translate-api', 'rrule']
   }
 })
