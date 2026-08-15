@@ -164,15 +164,11 @@ useSeo({
 
 onServerPrefetch(async () => {
   if (typeof window !== 'undefined') return
-  try {
-    appState.posts[lang.value] = await browseServerPosts(lang.value)
-    appState.events = getEvents()
-    appState.tags = getTags()
-  } catch (error) {
-    console.error('[BlogList] Server prefetch failed', error)
-    appState.posts[lang.value] = []
-    errorMessage.value = t('blog.fetchError')
-  }
+  // Let this reject: baking the error state into the prerendered HTML would ship
+  // a permanently empty blog, since production never re-fetches on the client.
+  appState.posts[lang.value] = await browseServerPosts(lang.value)
+  appState.events = getEvents()
+  appState.tags = getTags()
 })
 
 onMounted(() => {

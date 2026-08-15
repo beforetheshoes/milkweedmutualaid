@@ -20,7 +20,7 @@ export async function translateMissingPosts(): Promise<string[]> {
     include: 'tags,authors',
     limit: 'all',
     fields: 'id,title,slug,html,excerpt,custom_excerpt,feature_image,feature_image_alt,feature_image_caption,published_at,reading_time,canonical_url,og_image,og_title,og_description,twitter_image,twitter_title,twitter_description,meta_title,meta_description'
-  }).catch(() => [] as GhostPostDetail[])
+  })
 
   const allPosts = Array.isArray(allPostsRaw) ? allPostsRaw : []
 

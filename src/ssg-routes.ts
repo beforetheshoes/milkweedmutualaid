@@ -18,27 +18,37 @@ export async function includedRoutes() {
   const ghostServer = getGhostServer()
   const collected = new Set<string>(['/', '/en/blog', '/es/blog', '/en/about', '/es/about', '/en/interest', '/es/interest', '/en/contribute', '/es/contribute'])
 
+  // Ghost failures must abort the build. A build that "succeeds" with no content
+  // publishes an empty site over a good one, and nothing re-fetches at runtime.
   const [allPostsRaw, allPagesRaw, settings, tagsRaw] = await Promise.all([
     ghostServer.posts.browse<MinimalPost>({
       include: 'tags',
       fields: 'slug',
       limit: 'all'
-    }).catch(() => [] as MinimalPost[]),
+    }),
     ghostServer.pages.browse<MinimalPage>({
       fields: 'slug',
       limit: 'all'
-    }).catch(() => [] as MinimalPage[]),
-    ghostServer.settings.browse().catch(() => ({}) as GhostSettings) as Promise<GhostSettings>,
+    }),
+    ghostServer.settings.browse() as Promise<GhostSettings>,
     ghostServer.tags.browse<GhostTag>({
       include: 'count.posts',
       filter: 'visibility:public',
       limit: 'all'
-    }).catch(() => [] as GhostTag[])
+    })
   ])
 
   const allPosts = Array.isArray(allPostsRaw) ? allPostsRaw : []
   const allPages = Array.isArray(allPagesRaw) ? allPagesRaw : []
   const tags = Array.isArray(tagsRaw) ? tagsRaw : []
+
+  // A reachable-but-empty Ghost (wrong key, restored-from-blank instance) would
+  // otherwise sail through as a successful build with zero posts.
+  if (!allPosts.length) {
+    throw new Error(
+      'Ghost returned zero posts. Refusing to build an empty site — check GHOST_URL, GHOST_CONTENT_KEY, and that Ghost is up.'
+    )
+  }
 
   setSettings(settings)
   setTags(tags)
