@@ -179,6 +179,98 @@ describe('fetchUpcomingEvents — filtering and shape', () => {
   })
 })
 
+// ── Overrides ─────────────────────────────────────────────────────────────
+// Mirrors how Google exports an edited occurrence of a series: a second VEVENT
+// with the same UID and a RECURRENCE-ID naming the occurrence it replaces. The
+// overrides come before the master to prove the result doesn't depend on order.
+const OVERRIDE_VEVENTS: string[][] = [
+  // Jul 7 occurrence moved to Sun Jul 5 at 17:00.
+  [
+    'UID:series@milkweed',
+    'SUMMARY:Series Dinner',
+    'RECURRENCE-ID;TZID=America/New_York:20260707T173000',
+    'DTSTART;TZID=America/New_York:20260705T170000',
+    'DTEND;TZID=America/New_York:20260705T190000',
+    'SEQUENCE:2',
+    'STATUS:CONFIRMED'
+  ],
+  // Aug 4 occurrence cancelled.
+  [
+    'UID:series@milkweed',
+    'SUMMARY:Series Dinner',
+    'RECURRENCE-ID;TZID=America/New_York:20260804T173000',
+    'DTSTART;TZID=America/New_York:20260804T173000',
+    'DTEND;TZID=America/New_York:20260804T193000',
+    'STATUS:CANCELLED'
+  ],
+  // Sep 1 occurrence moved a day later — a second move in the same series.
+  [
+    'UID:series@milkweed',
+    'SUMMARY:Series Dinner',
+    'RECURRENCE-ID;TZID=America/New_York:20260901T173000',
+    'DTSTART;TZID=America/New_York:20260902T173000',
+    'DTEND;TZID=America/New_York:20260902T193000'
+  ],
+  // The series itself: 1st Tuesday monthly, 17:30 New York.
+  [
+    'UID:series@milkweed',
+    'SUMMARY:Series Dinner',
+    'DTSTART;TZID=America/New_York:20260602T173000',
+    'DTEND;TZID=America/New_York:20260602T193000',
+    'RRULE:FREQ=MONTHLY;BYDAY=1TU',
+    'STATUS:CONFIRMED'
+  ],
+  // A cancelled one-time event.
+  [
+    'UID:called-off@milkweed',
+    'SUMMARY:Called Off',
+    'DTSTART:20260620T180000Z',
+    'DTEND:20260620T190000Z',
+    'STATUS:CANCELLED'
+  ]
+]
+
+const OVERRIDE_ICS = [
+  'BEGIN:VCALENDAR',
+  'VERSION:2.0',
+  ...OVERRIDE_VEVENTS.flatMap((lines) => ['BEGIN:VEVENT', ...lines, 'END:VEVENT']),
+  'END:VCALENDAR'
+].join('\r\n')
+
+describe('fetchUpcomingEvents — RECURRENCE-ID overrides', () => {
+  it('shows a moved occurrence at its new time and drops the original slot', async () => {
+    mockFetch(() => new Response(OVERRIDE_ICS, { status: 200 }))
+    const starts = startsFor(await fetchUpcomingEvents(1000), 'Series Dinner')
+
+    // Jul 5 17:00 EDT (UTC-4) = 21:00Z replaces Jul 7 17:30 EDT = 21:30Z.
+    expect(starts).toContain('2026-07-05T21:00:00.000Z')
+    expect(starts).not.toContain('2026-07-07T21:30:00.000Z')
+    // Same for the second move in the series.
+    expect(starts).toContain('2026-09-02T21:30:00.000Z')
+    expect(starts).not.toContain('2026-09-01T21:30:00.000Z')
+  })
+
+  it('drops a cancelled occurrence but keeps the rest of the series', async () => {
+    mockFetch(() => new Response(OVERRIDE_ICS, { status: 200 }))
+    const starts = startsFor(await fetchUpcomingEvents(1000), 'Series Dinner')
+
+    expect(starts).not.toContain('2026-08-04T21:30:00.000Z')
+    // Untouched occurrence: Oct 6 17:30 EDT = 21:30Z.
+    expect(starts).toContain('2026-10-06T21:30:00.000Z')
+  })
+
+  it('drops a cancelled one-time event', async () => {
+    mockFetch(() => new Response(OVERRIDE_ICS, { status: 200 }))
+    expect(startsFor(await fetchUpcomingEvents(1000), 'Called Off')).toEqual([])
+  })
+
+  it('gives every override its own id even though they share the series UID', async () => {
+    mockFetch(() => new Response(OVERRIDE_ICS, { status: 200 }))
+    const ids = (await fetchUpcomingEvents(1000)).map((e) => e.id)
+    expect(new Set(ids).size).toBe(ids.length)
+  })
+})
+
 describe('fetchUpcomingEvents — failure handling', () => {
   it('returns an empty array on a non-OK response', async () => {
     mockFetch(() => new Response('nope', { status: 500 }))
