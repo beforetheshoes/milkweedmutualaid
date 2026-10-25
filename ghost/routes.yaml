@@ -1,0 +1,27 @@
+# Ghost routes — upload in Ghost Admin: Settings → Labs → Routes.
+#
+# Makes Ghost generate post URLs (newsletter links, "View post", the API's url
+# field) at the same paths the public site uses: /en/blog/<slug>/ and
+# /es/blog/<slug>/. redirects.yaml then sends those paths to milkweedmutualaid.org.
+#
+# The filters are exact complements, as Ghost requires collections not to
+# overlap: Spanish-only posts go to /es/, everything else — English, untagged,
+# and posts tagged both — goes to /en/. That matches how the site builds them.
+# The "/" collection keeps Ghost's own homepage working, which members land on
+# after following a sign-in link.
+#
+# Rollback: upload ghost/routes.original.yaml.
+routes:
+
+collections:
+  /es/blog/:
+    permalink: /es/blog/{slug}/
+    filter: 'tag:es+tag:-en'
+  /:
+    permalink: /en/blog/{slug}/
+    filter: 'tag:-es,tag:en'
+    template: index
+
+taxonomies:
+  tag: /tag/{slug}/
+  author: /author/{slug}/

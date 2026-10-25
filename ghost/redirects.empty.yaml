@@ -1,0 +1,4 @@
+# Rollback for redirects.yaml: uploading this removes every custom redirect.
+# Same as Ghost's own empty download template.
+301: {}
+302: {}

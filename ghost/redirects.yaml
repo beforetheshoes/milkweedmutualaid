@@ -1,0 +1,52 @@
+# Ghost redirects — upload in Ghost Admin: Settings → Labs → Redirects.
+#
+# Ghost compiles each key as a regex and appends /?$ but does NOT anchor the
+# start, so every key begins with ^ to stop it matching mid-path.
+#
+# 1. New permalinks (see routes.yaml) → the same path on the public site.
+# 2. Each post's old /<slug>/ permalink, so links in past newsletters and
+#    shares keep working. Exact slugs only — never a catch-all — so /, /members,
+#    /unsubscribe, /ghost, /p, /email, /r and /content are never touched.
+#    New posts get the new permalinks and need no entry here.
+#
+# 302, not 301: Ghost serves custom 301s with Cache-Control max-age=31536000
+# (caching.customRedirects.maxAge), so a browser that followed one would keep
+# it for a year even if this file were rolled back. 302s go out with max-age=0.
+# Promote to 301 once this has been live for a while, if wanted.
+302:
+  ^/(en|es)/blog/([^/]+): https://milkweedmutualaid.org/$1/blog/$2
+  ^/(en|es)/blog: https://milkweedmutualaid.org/$1/blog
+  ^/seed-starting-workshop: https://milkweedmutualaid.org/en/blog/seed-starting-workshop
+  ^/bike-repair-workshop: https://milkweedmutualaid.org/en/blog/bike-repair-workshop
+  ^/cybersecurity-101-workshop: https://milkweedmutualaid.org/en/blog/cybersecurity-101-workshop
+  ^/tomorrow-4-20-2: https://milkweedmutualaid.org/en/blog/tomorrow-4-20-2
+  ^/cross-pollination-coffee-hour: https://milkweedmutualaid.org/en/blog/cross-pollination-coffee-hour
+  ^/directions-for-coffee-hour: https://milkweedmutualaid.org/en/blog/directions-for-coffee-hour
+  ^/uproar-art-build: https://milkweedmutualaid.org/en/blog/uproar-art-build
+  ^/milkweed-mutual-aid-collective-fundraiser: https://milkweedmutualaid.org/en/blog/milkweed-mutual-aid-collective-fundraiser
+  ^/community-care-dinner: https://milkweedmutualaid.org/en/blog/community-care-dinner
+  ^/really-really-free-market-sunday-7-27: https://milkweedmutualaid.org/en/blog/really-really-free-market-sunday-7-27
+  ^/uproar-fest: https://milkweedmutualaid.org/en/blog/uproar-fest
+  ^/community-dinner: https://milkweedmutualaid.org/en/blog/community-dinner
+  ^/really-really-free-market-1-year-anniversary-location-change-interest-form-and-links: https://milkweedmutualaid.org/en/blog/really-really-free-market-1-year-anniversary-location-change-interest-form-and-links
+  ^/really-really-free-market-1-year-anniversary-at-gold-park: https://milkweedmutualaid.org/en/blog/really-really-free-market-1-year-anniversary-at-gold-park
+  ^/ice-watch-training-11-1: https://milkweedmutualaid.org/en/blog/ice-watch-training-11-1
+  ^/community-dinner-safety-trust-privacy: https://milkweedmutualaid.org/en/blog/community-dinner-safety-trust-privacy
+  ^/january-really-really-free-market: https://milkweedmutualaid.org/en/blog/january-really-really-free-market
+  ^/january-really-really-free-market-postponed-1-week: https://milkweedmutualaid.org/en/blog/january-really-really-free-market-postponed-1-week
+  ^/storm-support-community-care-and-whats-next: https://milkweedmutualaid.org/en/blog/storm-support-community-care-and-whats-next
+  ^/diversity-and-inclusion-workshop-its-personal: https://milkweedmutualaid.org/en/blog/diversity-and-inclusion-workshop-its-personal
+  ^/free-market-is-ba: https://milkweedmutualaid.org/en/blog/free-market-is-ba
+  ^/community-dinner-and-songwriting-workshop-next-week: https://milkweedmutualaid.org/en/blog/community-dinner-and-songwriting-workshop-next-week
+  ^/sunday-double-feature-really-really-free-market-seed-starting-workshop: https://milkweedmutualaid.org/en/blog/sunday-double-feature-really-really-free-market-seed-starting-workshop
+  ^/community-dinner-2026-05-05: https://milkweedmutualaid.org/en/blog/community-dinner-2026-05-05
+  ^/community-dinner-2: https://milkweedmutualaid.org/en/blog/community-dinner-2
+  ^/really-really-free-market-6-21: https://milkweedmutualaid.org/en/blog/really-really-free-market-6-21
+  ^/community-potluck: https://milkweedmutualaid.org/en/blog/community-potluck
+  ^/this-sunday-return-of-the-rrfm: https://milkweedmutualaid.org/en/blog/this-sunday-return-of-the-rrfm
+  ^/this-tuesday-community-dinner: https://milkweedmutualaid.org/en/blog/this-tuesday-community-dinner
+  ^/last-minute-reminder: https://milkweedmutualaid.org/en/blog/last-minute-reminder
+  ^/september-community-p-dinner: https://milkweedmutualaid.org/en/blog/september-community-p-dinner
+  ^/this-weekend-est: https://milkweedmutualaid.org/en/blog/this-weekend-est
+  ^/october-community-dinner: https://milkweedmutualaid.org/en/blog/october-community-dinner
+  ^/free-market-this-weekend-and-save-the-date: https://milkweedmutualaid.org/en/blog/free-market-this-weekend-and-save-the-date
