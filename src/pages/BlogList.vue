@@ -11,6 +11,7 @@ import { getSettings } from '../composables/useSettings'
 import { getEvents } from '../composables/useEvents'
 import { appState } from '../state'
 import { ghostSrcset, ghostSizes } from '../utils/images'
+import { formatPostDate, formatEventDate as formatEventDateFor } from '../utils/dates'
 import type { GhostPostSummary } from '../types/ghost'
 
 const POSTS_PER_PAGE = 12
@@ -77,28 +78,12 @@ function loadMore() {
   visibleCount.value += POSTS_PER_PAGE
 }
 
-const formatDate = (value?: string | null) => {
-  if (!value) return null
-  const locale = lang.value === 'es' ? 'es' : 'en'
-  try {
-    return new Intl.DateTimeFormat(locale, { dateStyle: 'long' }).format(new Date(value))
-  } catch {
-    return null
-  }
-}
+const displayLocale = computed(() => (lang.value === 'es' ? 'es' : 'en'))
 
-const formatEventDate = (start: string, end: string, allDay: boolean) => {
-  const locale = lang.value === 'es' ? 'es' : 'en'
-  const startDate = new Date(start)
-  if (allDay) {
-    return new Intl.DateTimeFormat(locale, { weekday: 'short', month: 'short', day: 'numeric' }).format(startDate)
-  }
-  const datePart = new Intl.DateTimeFormat(locale, { weekday: 'short', month: 'short', day: 'numeric' }).format(startDate)
-  const timePart = new Intl.DateTimeFormat(locale, { hour: 'numeric', minute: '2-digit' }).format(startDate)
-  const endDate = new Date(end)
-  const endTimePart = new Intl.DateTimeFormat(locale, { hour: 'numeric', minute: '2-digit' }).format(endDate)
-  return `${datePart}, ${timePart} – ${endTimePart}`
-}
+const formatDate = (value?: string | null) => formatPostDate(value, displayLocale.value)
+
+const formatEventDate = (start: string, end: string, allDay: boolean) =>
+  formatEventDateFor(start, end, allDay, displayLocale.value)
 
 async function browseServerPosts(targetLang: string) {
   const ghostServer = getGhostServer()
