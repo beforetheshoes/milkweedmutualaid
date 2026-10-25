@@ -10,7 +10,8 @@
     Served by netlify.toml (status 404) for any /en/blog/* or /es/blog/* path
     that has no built page yet: the gap between a post being published — when
     the newsletter goes out — and the Netlify rebuild it triggers finishing.
-    Polls its own URL and reloads once the real page exists.
+    Tells readers to refresh or visit the main site; also checks its own URL in
+    the background and reloads if the real page appears.
   -->
   <style>
     @font-face {
@@ -87,6 +88,13 @@
       font-size: 0.85rem;
     }
     a.button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+    .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+    a.button.secondary {
+      background: transparent;
+      color: var(--base-content);
+      border: 3px solid var(--primary);
+      padding: 7px 17px;
+    }
     [hidden] { display: none !important; }
   </style>
 </head>
@@ -95,10 +103,12 @@
     <img src="/milkweedlogo-sm.png" alt="Milkweed Mutual Aid">
     <h1 id="heading">This post is on its way</h1>
     <div id="spinner" class="spinner" aria-hidden="true"></div>
-    <p id="body">It was just published, and the website is still updating. This page will open it automatically as soon as it's ready — usually within a few minutes.</p>
-    <p id="status" class="status" role="status" aria-live="polite"></p>
-    <noscript><p class="status">Please refresh this page in a few minutes.</p></noscript>
-    <a id="all-posts" class="button" href="/en/blog">See all posts</a>
+    <p id="body">It was just published, and the website is still updating — that usually takes a few minutes.</p>
+    <p id="hint" class="status">Please refresh this page in a minute or two, or visit the main site in the meantime.</p>
+    <div class="actions">
+      <a id="refresh" class="button" href="">Refresh</a>
+      <a id="main-site" class="button secondary" href="/en/blog">Go to the main site</a>
+    </div>
   </main>
   <script>
     (function () {
@@ -106,52 +116,38 @@
       var text = es
         ? {
             title: 'Esta publicación está en camino',
-            heading: 'Esta publicación está en camino',
-            body: 'Se acaba de publicar y el sitio web todavía se está actualizando. Esta página la abrirá automáticamente en cuanto esté lista, normalmente en unos minutos.',
-            checking: 'Buscando la publicación…',
-            giveUpHeading: 'No pudimos encontrar esta publicación',
-            giveUpBody: 'Puede que el enlace haya cambiado o que la actualización esté tardando más de lo normal.',
-            allPosts: 'Ver todas las publicaciones'
+            body: 'Se acaba de publicar y el sitio web todavía se está actualizando; normalmente tarda unos minutos.',
+            hint: 'Vuelve a cargar esta página en un minuto o dos, o mientras tanto visita el sitio principal.',
+            refresh: 'Recargar',
+            mainSite: 'Ir al sitio principal'
           }
         : {
             title: 'This post is on its way',
-            heading: 'This post is on its way',
-            body: "It was just published, and the website is still updating. This page will open it automatically as soon as it's ready — usually within a few minutes.",
-            checking: 'Checking for the post…',
-            giveUpHeading: "We couldn't find this post",
-            giveUpBody: 'The link may have changed, or the update is taking longer than usual.',
-            allPosts: 'See all posts'
+            body: 'It was just published, and the website is still updating — that usually takes a few minutes.',
+            hint: 'Please refresh this page in a minute or two, or visit the main site in the meantime.',
+            refresh: 'Refresh',
+            mainSite: 'Go to the main site'
           }
 
       var $ = function (id) { return document.getElementById(id) }
       document.documentElement.lang = es ? 'es' : 'en'
       document.title = text.title + ' · Milkweed Mutual Aid'
-      $('heading').textContent = text.heading
+      $('heading').textContent = text.title
       $('body').textContent = text.body
-      $('all-posts').textContent = text.allPosts
-      $('all-posts').href = es ? '/es/blog' : '/en/blog'
+      $('hint').textContent = text.hint
+      $('refresh').textContent = text.refresh
+      $('refresh').href = location.pathname
+      $('main-site').textContent = text.mainSite
+      $('main-site').href = es ? '/es/blog' : '/en/blog'
 
-      var INTERVAL_MS = 15000
-      var GIVE_UP_MS = 20 * 60 * 1000
-      var startedAt = Date.now()
-      var timer = null
-      var inFlight = false
-
-      function giveUp() {
-        clearInterval(timer)
-        $('spinner').hidden = true
-        $('heading').textContent = text.giveUpHeading
-        $('body').textContent = text.giveUpBody
-        $('status').textContent = ''
-      }
-
+      // Best effort, never promised on the page: browsers throttle or pause
+      // timers in background tabs, so readers are told to refresh themselves.
       // While the post is unbuilt, Netlify answers this URL with this page and a
-      // 404. Once the deploy lands it answers 200 with the real post.
+      // 404; once the deploy lands it answers 200 with the real post.
+      var inFlight = false
       function check() {
         if (inFlight) return
-        if (Date.now() - startedAt > GIVE_UP_MS) return giveUp()
         inFlight = true
-        $('status').textContent = text.checking
         fetch(location.pathname, { cache: 'no-store' })
           .then(function (res) {
             if (res.ok) location.reload()
@@ -159,11 +155,10 @@
           .catch(function () {})
           .then(function () {
             inFlight = false
-            $('status').textContent = ''
           })
       }
 
-      timer = setInterval(check, INTERVAL_MS)
+      setInterval(check, 20000)
       document.addEventListener('visibilitychange', function () {
         if (document.visibilityState === 'visible') check()
       })
