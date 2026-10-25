@@ -9,6 +9,7 @@ import { hasLangTag } from '../utils/posts'
 import { getTranslatedPost, getAutoTranslatedCounterpart } from '../translation/store'
 import { appState } from '../state'
 import { ghostSrcset, ghostSizes } from '../utils/images'
+import { formatPostDate } from '../utils/dates'
 import type { GhostPostDetail } from '../types/ghost'
 
 const DETAIL_FIELDS = 'id,title,slug,html,plaintext,excerpt,custom_excerpt,feature_image,feature_image_alt,feature_image_caption,published_at,reading_time,canonical_url,og_image,og_title,og_description,twitter_image,twitter_title,twitter_description,meta_title,meta_description'
@@ -27,15 +28,7 @@ const slug = computed(() => {
   return Array.isArray(value) ? value[0] ?? '' : value ?? ''
 })
 
-const formattedDate = computed(() => {
-  if (!post.value?.published_at) return null
-  const locale = lang.value === 'es' ? 'es' : 'en'
-  try {
-    return new Intl.DateTimeFormat(locale, { dateStyle: 'long' }).format(new Date(post.value.published_at))
-  } catch {
-    return null
-  }
-})
+const formattedDate = computed(() => formatPostDate(post.value?.published_at, lang.value === 'es' ? 'es' : 'en'))
 
 const readingTime = computed(() => {
   if (!post.value) return null
