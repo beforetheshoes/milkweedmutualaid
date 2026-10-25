@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Milkweed Mutual Aid</title>
+  <link rel="icon" href="/favicon.png">
+  <!--
+    Served by netlify.toml (status 404) for any /en/blog/* or /es/blog/* path
+    that has no built page yet: the gap between a post being published — when
+    the newsletter goes out — and the Netlify rebuild it triggers finishing.
+    Polls its own URL and reloads once the real page exists.
+  -->
+  <style>
+    @font-face {
+      font-family: 'Lexend Deca';
+      src: url('/fonts/lexend-deca.woff2') format('woff2');
+      font-weight: 100 900;
+      font-display: swap;
+    }
+    :root {
+      --primary: oklch(43.13% 0.179 310.19);
+      --primary-content: oklch(100% 0 0);
+      --accent: oklch(80.80% 0.123 203.68);
+      --base-100: oklch(100% 0 0);
+      --base-200: oklch(97% 0.008 310);
+      --base-content: oklch(22.4% 0.051 310.5);
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --primary: oklch(55% 0.179 310.19);
+        --accent: oklch(81.1% 0.132 202.3);
+        --base-100: oklch(18% 0.035 310);
+        --base-200: oklch(22% 0.03 310);
+        --base-content: oklch(90% 0.015 310);
+        color-scheme: dark;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px 16px;
+      background: var(--base-100);
+      color: var(--base-content);
+      font-family: 'Lexend Deca', system-ui, sans-serif;
+      line-height: 1.5;
+    }
+    main {
+      width: 100%;
+      max-width: 520px;
+      text-align: center;
+      background: var(--base-200);
+      border: 3px solid var(--primary);
+      border-radius: 12px;
+      padding: 32px 24px;
+      box-shadow: 6px 6px 0 0 color-mix(in oklch, var(--primary) 30%, transparent);
+    }
+    img { width: 72px; height: auto; }
+    h1 { margin: 16px 0 8px; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.01em; }
+    p { margin: 0 0 16px; }
+    .status { font-weight: 700; }
+    .spinner {
+      width: 28px; height: 28px; margin: 8px auto 16px;
+      border: 4px solid color-mix(in oklch, var(--primary) 25%, transparent);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
+    a.button {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      background: var(--primary);
+      color: var(--primary-content);
+      font-weight: 800;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.85rem;
+    }
+    a.button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <main>
+    <img src="/milkweedlogo-sm.png" alt="Milkweed Mutual Aid">
+    <h1 id="heading">This post is on its way</h1>
+    <div id="spinner" class="spinner" aria-hidden="true"></div>
+    <p id="body">It was just published, and the website is still updating. This page will open it automatically as soon as it's ready — usually within a few minutes.</p>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <noscript><p class="status">Please refresh this page in a few minutes.</p></noscript>
+    <a id="all-posts" class="button" href="/en/blog">See all posts</a>
+  </main>
+  <script>
+    (function () {
+      var es = location.pathname.indexOf('/es/') === 0
+      var text = es
+        ? {
+            title: 'Esta publicación está en camino',
+            heading: 'Esta publicación está en camino',
+            body: 'Se acaba de publicar y el sitio web todavía se está actualizando. Esta página la abrirá automáticamente en cuanto esté lista, normalmente en unos minutos.',
+            checking: 'Buscando la publicación…',
+            giveUpHeading: 'No pudimos encontrar esta publicación',
+            giveUpBody: 'Puede que el enlace haya cambiado o que la actualización esté tardando más de lo normal.',
+            allPosts: 'Ver todas las publicaciones'
+          }
+        : {
+            title: 'This post is on its way',
+            heading: 'This post is on its way',
+            body: "It was just published, and the website is still updating. This page will open it automatically as soon as it's ready — usually within a few minutes.",
+            checking: 'Checking for the post…',
+            giveUpHeading: "We couldn't find this post",
+            giveUpBody: 'The link may have changed, or the update is taking longer than usual.',
+            allPosts: 'See all posts'
+          }
+
+      var $ = function (id) { return document.getElementById(id) }
+      document.documentElement.lang = es ? 'es' : 'en'
+      document.title = text.title + ' · Milkweed Mutual Aid'
+      $('heading').textContent = text.heading
+      $('body').textContent = text.body
+      $('all-posts').textContent = text.allPosts
+      $('all-posts').href = es ? '/es/blog' : '/en/blog'
+
+      var INTERVAL_MS = 15000
+      var GIVE_UP_MS = 20 * 60 * 1000
+      var startedAt = Date.now()
+      var timer = null
+      var inFlight = false
+
+      function giveUp() {
+        clearInterval(timer)
+        $('spinner').hidden = true
+        $('heading').textContent = text.giveUpHeading
+        $('body').textContent = text.giveUpBody
+        $('status').textContent = ''
+      }
+
+      // While the post is unbuilt, Netlify answers this URL with this page and a
+      // 404. Once the deploy lands it answers 200 with the real post.
+      function check() {
+        if (inFlight) return
+        if (Date.now() - startedAt > GIVE_UP_MS) return giveUp()
+        inFlight = true
+        $('status').textContent = text.checking
+        fetch(location.pathname, { cache: 'no-store' })
+          .then(function (res) {
+            if (res.ok) location.reload()
+          })
+          .catch(function () {})
+          .then(function () {
+            inFlight = false
+            $('status').textContent = ''
+          })
+      }
+
+      timer = setInterval(check, INTERVAL_MS)
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible') check()
+      })
+    })()
+  </script>
+</body>
+</html>

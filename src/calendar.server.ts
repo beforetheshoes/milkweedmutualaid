@@ -162,15 +162,34 @@ export async function fetchUpcomingEvents(maxResults = 6): Promise<CalendarEvent
     }
 
     const text = unfold(await response.text())
-    const blocks = text.split('BEGIN:VEVENT')
+    const blocks = text
+      .split('BEGIN:VEVENT')
+      .slice(1)
+      .map((raw) => raw.split('END:VEVENT')[0])
     const now = new Date()
     const windowEnd = new Date(now)
     windowEnd.setMonth(windowEnd.getMonth() + LOOKAHEAD_MONTHS)
 
+    // A VEVENT carrying RECURRENCE-ID replaces one occurrence of the series with
+    // the same UID (moved, retimed, or STATUS:CANCELLED). Collect those first so
+    // the series expansion below can drop the occurrences they replace, wherever
+    // the override sits in the feed.
+    const replacedOccurrences = new Map<string, Set<number>>()
+    for (const block of blocks) {
+      const uid = getRaw(block, 'UID')
+      const recurrenceIdRaw = getRaw(block, 'RECURRENCE-ID')
+      if (!uid || !recurrenceIdRaw) continue
+      const replaced = replacedOccurrences.get(uid) ?? new Set<number>()
+      replaced.add(resolveInstant(parseDateField(recurrenceIdRaw)).getTime())
+      replacedOccurrences.set(uid, replaced)
+    }
+
     const upcoming: CalendarEvent[] = []
 
-    for (let i = 1; i < blocks.length; i++) {
-      const block = blocks[i].split('END:VEVENT')[0]
+    for (let i = 0; i < blocks.length; i++) {
+      const block = blocks[i]
+
+      if (getRaw(block, 'STATUS')?.trim() === 'CANCELLED') continue
 
       const dtstartRaw = getRaw(block, 'DTSTART')
       if (!dtstartRaw) continue
@@ -184,6 +203,7 @@ export async function fetchUpcomingEvents(maxResults = 6): Promise<CalendarEvent
       const location = getRaw(block, 'LOCATION')
       const uid = getRaw(block, 'UID')
       const rruleLine = getRaw(block, 'RRULE')
+      const isOverride = getRaw(block, 'RECURRENCE-ID') !== undefined
 
       const startInstant = resolveInstant(dtstart)
       const endInstant = dtend ? resolveInstant(dtend) : startInstant
@@ -199,7 +219,10 @@ export async function fetchUpcomingEvents(maxResults = 6): Promise<CalendarEvent
             .filter(Boolean)
             .map((v) => ({ tzid: field.tzid, value: v, allDay: /^\d{8}$/.test(v) }))
         })
-        occurrences = expandRecurring(dtstart, rruleLine, exdates, now, windowEnd)
+        const replaced = uid ? replacedOccurrences.get(uid) : undefined
+        occurrences = expandRecurring(dtstart, rruleLine, exdates, now, windowEnd).filter(
+          (occ) => !replaced?.has(occ.getTime())
+        )
       } else {
         occurrences = [startInstant]
       }
@@ -212,7 +235,8 @@ export async function fetchUpcomingEvents(maxResults = 6): Promise<CalendarEvent
         if (occStart > windowEnd) continue
 
         upcoming.push({
-          id: rruleLine ? `${base}-${occStart.toISOString()}` : base,
+          // Overrides share their series' UID, so they need a per-occurrence id too.
+          id: rruleLine || isOverride ? `${base}-${occStart.toISOString()}` : base,
           title: summary ? unescapeIcal(summary) : 'Untitled Event',
           description: description ? unescapeIcal(description) : undefined,
           location: location ? unescapeIcal(location) : undefined,
