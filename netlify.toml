@@ -6,6 +6,16 @@
   NODE_VERSION = "22"
   PNPM_VERSION = "10.6.5"
 
+# Ghost-hosted uploads (images, media, files). Ghost builds these URLs from its
+# `url` config, so pointing that at this domain makes them resolve here instead
+# of the Ghost host. Proxy them back, ahead of the SPA fallback below — that
+# catch-all would otherwise answer them with index.html and a 200, breaking
+# images with no 404 to signal it.
+[[redirects]]
+  from = "/content/*"
+  to = "https://ghost.milkweedmutualaid.org/content/:splat"
+  status = 200
+
 # SPA fallback — serve index.html for client-side routes
 [[redirects]]
   from = "/*"
